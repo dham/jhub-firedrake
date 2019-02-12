@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export myName="jhub-firedrake"
-export azureRegion="westeurope"
+export myName="jhub-firedrake-test"
+export azureRegion="westus2"
 
 az ad sp create-for-rbac --skip-assignment >> sp.out
 
@@ -15,7 +15,7 @@ export resourceGroup=${myName}
 az group create --name=${myName} --location=${azureRegion} --output table >> resgroup.out
 cat resgroup.out
 
-export aksNodeCount=3
+export aksNodeCount=2
 export kubernetesVersion=1.11.5
 
 az aks create --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys >> aksCreate.out
@@ -59,7 +59,7 @@ echo "proxy:
     hosts:
       - '${myName}.${azureRegion}.cloudapp.azure.com'
     letsencrypt:
-      contactEmail: tim.greaves@imperial.ac.uk
+      contactEmail: david.ham@imperial.ac.uk
 
 hub:
   image:
