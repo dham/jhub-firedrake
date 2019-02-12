@@ -4,9 +4,9 @@ export myName="jhub-firedrake-test"
 export azureRegion="westus2"
 
 # Tagging for Azure resource group
-export costCentre=project
-export Owner=username
-export Creator=username
+export costCentre=PRISMMath
+export Owner=dham@ic.ac.uk
+export Creator=dham@ic.ac.uk
 
 az ad sp create-for-rbac --skip-assignment >> sp.out
 
@@ -83,8 +83,8 @@ auth:
 
 singleuser:
   image:
-    name: tmbgreaves/jupyterhub-k8s
-    tag: 'firedrakeSingleUser20190208-000'
+    name: dhamimperial/firedrake
+    tag: 'latest'
   storage:
     type: none" > jhub-config.yaml
 
