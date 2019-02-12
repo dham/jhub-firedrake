@@ -4,7 +4,7 @@
 FROM jupyter/scipy-notebook
 
 # This DockerFile is looked after by
-MAINTAINER Tim Greaves <tim.greaves@imperial.ac.uk>
+MAINTAINER David Ham <david.ham@imperial.ac.uk>
 
 # Update and install required packages for Firedrake
 USER root
@@ -29,7 +29,7 @@ RUN rm spec-file.txt
 # Now install firedrake
 WORKDIR /opt/conda/envs/firedrake/
 RUN curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
-RUN bash -c "source activate firedrake && python3 firedrake-install --no-package-manager --disable-ssh --install pyadjoint --install thetis --venv-name=firedrake-venv"
+RUN bash -c "source activate firedrake && python3 firedrake-install --no-package-manager --disable-ssh --install pyadjoint --install thetis --venv-name=firedrake-venv --package-version firedrake cse19"
 
 # Set up a bash environment for any interactive shell use
 RUN mkdir -p /opt/conda/envs/firedrake/etc/conda/activate.d
@@ -45,9 +45,11 @@ USER root
 RUN mkdir -p /usr/local/share/jupyter
 RUN chown jovyan /usr/local/share/jupyter
 USER jovyan
-RUN bash -c "source activate firedrake && python -m ipykernel install --name firedrake --display-name 'Python 3 (firedrake)'"
+RUN bash -c "source activate firedrake && python -m ipykernel install --name python3 --display-name 'Python 3 (firedrake)'"
 
 # Complete the environment, and leave the container in a state ready for jhub
 RUN bash -c "source activate firedrake && pip install mpltools"
 WORKDIR /home/jovyan
+RUN cp -r /opt/conda/envs/firedrake/firedrake-venv/src/firedrake/docs/notebooks/* .
+RUN rmdir work
 ENV OMPI_MCA_btl=tcp,self
