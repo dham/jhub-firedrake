@@ -29,7 +29,7 @@ RUN rm spec-file.txt
 # Now install firedrake
 WORKDIR /opt/conda/envs/firedrake/
 RUN curl -O https://raw.githubusercontent.com/firedrakeproject/firedrake/master/scripts/firedrake-install
-RUN bash -c "source activate firedrake && python3 firedrake-install --no-package-manager --disable-ssh --install pyadjoint --install thetis --venv-name=firedrake-venv --package-version firedrake cse19"
+RUN bash -c "source activate firedrake && python3 firedrake-install --no-package-manager --disable-ssh --install pyadjoint --install thetis --venv-name=firedrake-venv --package-branch firedrake cse19"
 
 # Set up a bash environment for any interactive shell use
 RUN mkdir -p /opt/conda/envs/firedrake/etc/conda/activate.d
