@@ -21,9 +21,9 @@ az group create --name=${myName} --location=${azureRegion} --tags costCentre=${c
 cat resgroup.out
 
 export aksNodeCount=2
-export kubernetesVersion=1.11.5
+export kubernetesVersion=1.11.7
 
-az aks create --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
+az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
 cat aksCreate.out
 
 export existingTags=$(az group show --name MC_${myName}_${myName}_${azureRegion} --query tags | tr -d '"{},' | sed 's/: /=/g')
@@ -91,6 +91,9 @@ singleuser:
 # Pause for tiller to initialise
 while [[ ! $(kubectl --namespace kube-system get pods | grep tiller-deploy | grep Running) ]] ; do echo -n $(date) ; echo " Waiting for Tiller to initialise" ; sleep 10 ; done
 
+# Occasionally tiller seems to need a few more seconds before it actually accepts connections
+sleep 10 && kubectl --namespace kube-system get pods
+
 helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
 
 # The first install will time out whilst images pull. We need to wait for images
@@ -106,3 +109,5 @@ export ipAddress=$(az network public-ip list --resource-group MC_${myName}_${myN
 export ipName=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '${ipAddress}')].[name]" --output tsv | uniq)
 
 az network public-ip update --resource-group MC_${myName}_${myName}_${azureRegion} --name  ${ipName} --dns-name ${myName}
+
+kubectl --namespace jupyterhub get pods
