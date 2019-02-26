@@ -45,11 +45,12 @@ USER root
 RUN mkdir -p /usr/local/share/jupyter
 RUN chown jovyan /usr/local/share/jupyter
 USER jovyan
-RUN bash -c "source activate firedrake && python -m ipykernel install --name python3 --display-name 'Python 3 (firedrake)'"
+RUN bash -c "source activate firedrake && python -m ipykernel install --name firedrake --display-name 'Python 3 (firedrake)'"
 
 # Complete the environment, and leave the container in a state ready for jhub
-RUN bash -c "source activate firedrake && pip install mpltools"
+RUN bash -c "source activate firedrake && pip install mpltools nbformat"
 WORKDIR /home/jovyan
-RUN cp -r /opt/conda/envs/firedrake/firedrake-venv/src/firedrake/docs/notebooks/* .
+RUN bash -c "source activate firedrake && move-notebooks"
+RUN bash -c "source activate firedrake && rekernel-notebooks"
 RUN rmdir work
 ENV OMPI_MCA_btl=tcp,self
