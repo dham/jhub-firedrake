@@ -21,7 +21,6 @@ az group create --name=${myName} --location=${azureRegion} --tags costCentre=${c
 cat resgroup.out
 
 export aksNodeCount=5
-export aksNodeCount=2
 export kubernetesVersion=1.11.8
 
 az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
@@ -97,11 +96,11 @@ sleep 10 && kubectl --namespace kube-system get pods
 
 helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
 
-# The first install will time out whilst images pull. We need to wait for images
-# to complete pulling, then run the install again.
-while [[ ! $(kubectl --namespace jupyterhub get pods | grep hook-image-awaiter | grep Completed ) ]] ; do echo -n $(date) ; echo " Waiting for images to pull" ; sleep 60 ; done
+# # The first install will time out whilst images pull. We need to wait for images
+# # to complete pulling, then run the install again.
+# while [[ ! $(kubectl --namespace jupyterhub get pods | grep hook-image-awaiter | grep Completed ) ]] ; do echo -n $(date) ; echo " Waiting for images to pull" ; sleep 60 ; done
 
-helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
+# helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
 
 # Pause for public IP to initialise
 while [[ ! $(az network public-ip list --resource-group MC_${myName}_${myName}_${azureRegion} --output table | awk 'NF' ) ]] ; do echo -n $(date) ; echo " Waiting for public IP" ; sleep 60 ; done
