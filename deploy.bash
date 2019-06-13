@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export myName="jhub-firedrake-test"
-export azureRegion="westus2"
+export azureRegion="westeurope"
 
 # Tagging for Azure resource group
 export costCentre=PRISMMath
@@ -20,8 +20,8 @@ export resourceGroup=${myName}
 az group create --name=${myName} --location=${azureRegion} --tags costCentre=${costCentre} Owner=${Owner} Creator=${Creator} --output table > resgroup.out
 cat resgroup.out
 
-export aksNodeCount=2
-export kubernetesVersion=1.11.7
+export aksNodeCount=5
+export kubernetesVersion=1.11.8
 
 az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
 cat aksCreate.out
