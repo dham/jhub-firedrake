@@ -21,7 +21,7 @@ az group create --name=${myName} --location=${azureRegion} --tags costCentre=${c
 cat resgroup.out
 
 export aksNodeCount=5
-export kubernetesVersion=1.11.8
+export kubernetesVersion=1.11.9
 
 az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
 cat aksCreate.out
@@ -83,7 +83,7 @@ auth:
 
 singleuser:
   image:
-    name: dhamimperial/firedrake
+    name: firedrakeproject/firedrake-notebooks
     tag: 'latest'
   storage:
     type: none" > jhub-config.yaml
