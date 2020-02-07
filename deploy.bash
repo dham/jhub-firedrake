@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export myName="jhub-firedrake-test"
-export azureRegion="westeurope"
+export azureRegion="westus2"
 
 # Tagging for Azure resource group
 export costCentre=PRISMMath
@@ -21,7 +21,7 @@ az group create --name=${myName} --location=${azureRegion} --tags costCentre=${c
 cat resgroup.out
 
 export aksNodeCount=5
-export kubernetesVersion=1.11.9
+export kubernetesVersion=1.13.12
 
 az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
 cat aksCreate.out
@@ -93,6 +93,8 @@ while [[ ! $(kubectl --namespace kube-system get pods | grep tiller-deploy | gre
 
 # Occasionally tiller seems to need a few more seconds before it actually accepts connections
 sleep 10 && kubectl --namespace kube-system get pods
+
+kubectl create namespace jupyterhub
 
 helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
 
