@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export myName="jhub-firedrake-test"
+export myName="jhub-firedrake"
 export azureRegion="westus2"
 
 # Tagging for Azure resource group
