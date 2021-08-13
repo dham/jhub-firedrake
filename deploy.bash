@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export myName="jhub-firedrake"
-export azureRegion="westus2"
+export myName="jhub-firedrake2"
+export azureRegion="uksouth"
 
 # Tagging for Azure resource group
 export costCentre=PRISMMath
@@ -21,7 +21,7 @@ az group create --name=${myName} --location=${azureRegion} --tags costCentre=${c
 cat resgroup.out
 
 export aksNodeCount=5
-export kubernetesVersion=1.13.12
+export kubernetesVersion=1.21.2
 
 az aks create --location ${azureRegion} --resource-group ${myName} --name ${myName} --node-count ${aksNodeCount} --kubernetes-version ${kubernetesVersion} --service-principal ${servicePrincipal} --client-secret ${clientSecret} --generate-ssh-keys > aksCreate.out
 cat aksCreate.out
@@ -74,12 +74,11 @@ echo "proxy:
 hub:
   image:
     name: jupyterhub/k8s-hub
-    tag: '0.7.0'
+    tag: '0.11.0'
+  config:
+    JupyterHub:
+      authenticator_class: tmpauthenticator.TmpAuthenticator
 
-auth:
-  type: custom
-  custom:
-    className: 'tmpauthenticator.TmpAuthenticator'
 
 singleuser:
   image:
@@ -96,7 +95,7 @@ sleep 10 && kubectl --namespace kube-system get pods
 
 kubectl create namespace jupyterhub
 
-helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.7.0   --values jhub-config.yaml
+helm upgrade --install jupyterhub jupyterhub/jupyterhub --namespace jupyterhub --version 0.11.0 --values jhub-config.yaml
 
 # # The first install will time out whilst images pull. We need to wait for images
 # # to complete pulling, then run the install again.
