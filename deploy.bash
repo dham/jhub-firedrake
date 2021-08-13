@@ -66,6 +66,7 @@ export proxySecretToken=`openssl rand -hex 32`
 echo "proxy:
   secretToken: '${proxySecretToken}'
   https:
+    enabled: true
     hosts:
       - '${myName}.${azureRegion}.cloudapp.azure.com'
     letsencrypt:
